@@ -80,7 +80,7 @@ app.post('/api/v1/tours', (req, res) => {
 })
 
 app.patch('/api/v1/tours/:id', (req, res) => {
-  console.log(req.body)
+    console.log(req.body)
     if (req.params.id * 1 > tours.length) {
         return res.status(404).json({
             status: 'fail',
@@ -88,7 +88,7 @@ app.patch('/api/v1/tours/:id', (req, res) => {
         });
     }
     res.status(200).json({
-        
+
         status: 'success',
         data: {
             tour: '<update tour..>'
@@ -96,6 +96,21 @@ app.patch('/api/v1/tours/:id', (req, res) => {
     });
 
 });
+
+app.delete('/api/v1/tours/:id', (req, res) => {
+    if (req.params.id > tours.length) {
+        res.status(404).json({
+            status: 'fail',
+            message: 'invalid id cant delete'
+        })
+
+    }
+    res.status(204).json({
+        status: 'success',
+        message: 'delete tour',
+        data : null
+    })
+})
 
 // j'ecoute sur le port 3000
 const port = 3000;

@@ -7,33 +7,27 @@ const app = express();
 // middlewear pour permettre d'utiliser les json
 app.use(express.json());
 
-// app.get('/', (req, res) => {
-//     res.status(200)
-//         .json({ message: ('hello from the server'), app: 'Natours' })
-// })
-
-// app.post('/',(req,res)=>{
-//     res.status(200)
-//         .send("you can post to this url");
-// })
 
 // permet d'avoir acces et lire le file 
 const tours = JSON.parse(
     fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`))
 
+
 // requete pour avoir tous les users 
-app.get('/api/v1/tours', (req, res) => {
+
+const getAllTours = (req, res) => {
     res.status(200).json({
-        status: 'success',
+        status: 'succes',
+        message: "all tours",
         results: tours.length,
         data: {
             tours
         }
     })
-})
+}
 
 // requete pour avoir un utilisateur 
-app.get('/api/v1/tours/:id', (req, res) => {
+const getTour = (req, res) => {
     console.log(req.params)
 
     // convert character en nombre 
@@ -54,32 +48,10 @@ app.get('/api/v1/tours/:id', (req, res) => {
             tour
         }
     })
-})
 
-// permet de post dans le file tours-simple
-app.post('/api/v1/tours', (req, res) => {
+}
 
-    // console.log(req.body)
-
-    // permet de rajouter un id+1
-    const newId = tours[tours.length - 1].id + 1;
-    const newTour = Object.assign({ id: newId }, req.body)
-    tours.push(newTour);
-    fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err => {
-        res.status(201).json({
-            message: 'tours crée',
-            status: 'succes',
-            tour: newTour
-
-        })
-    })
-
-
-
-
-})
-
-app.patch('/api/v1/tours/:id', (req, res) => {
+const updateTour = (req, res) => {
     console.log(req.body)
     if (req.params.id * 1 > tours.length) {
         return res.status(404).json({
@@ -95,9 +67,28 @@ app.patch('/api/v1/tours/:id', (req, res) => {
         }
     });
 
-});
+}
 
-app.delete('/api/v1/tours/:id', (req, res) => {
+const createTour = (req, res) => {
+    const newId = tours[tours.length - 1].id + 1;
+    const newTour = Object.assign({ id: newId }, req.body)
+    tours.push(newTour);
+    fs.writeFile(`${__dirname}/dev-data/data/tours-simple.json`, JSON.stringify(tours), err => {
+        res.status(201).json({
+            message: 'tours crée',
+            status: 'succes',
+            tour: newTour
+
+        })
+    })
+
+
+
+
+
+}
+
+const deleteTour = (req, res) => {
     if (req.params.id > tours.length) {
         res.status(404).json({
             status: 'fail',
@@ -108,9 +99,29 @@ app.delete('/api/v1/tours/:id', (req, res) => {
     res.status(204).json({
         status: 'success',
         message: 'delete tour',
-        data : null
+        data: null
     })
-})
+
+}
+
+//les routes //
+
+// app.get('/api/v1/tours', getAllTours);
+// app.get('/api/v1/tours/:id', getTour);
+// app.post('/api/v1/tours', createTour);
+// app.patch('/api/v1/tours/:id', updateTour);
+// app.delete('/api/v1/tours/:id', deleteTour);
+
+app
+    .route('/api/v1/tours')
+    .get(getAllTours)
+    .post(createTour);
+
+app
+    .route('/api/v1/tours/:id')
+    .get(getTour)
+    .patch(updateTour)
+    .delete(deleteTour)
 
 // j'ecoute sur le port 3000
 const port = 3000;

@@ -7,6 +7,17 @@ const app = express();
 // middlewear pour permettre d'utiliser les json
 app.use(express.json());
 
+//middlewear 
+app.use((req, res, next) => {
+    console.log("hello from middlewear😄 ");
+    next();
+});
+
+app.use((req, res, next) => {
+    req.requesTime = new Date().toISOString();
+    next();
+})
+
 
 // permet d'avoir acces et lire le file 
 const tours = JSON.parse(
@@ -20,6 +31,7 @@ const getAllTours = (req, res) => {
         status: 'succes',
         message: "all tours",
         results: tours.length,
+        request: req.requesTime,
         data: {
             tours
         }

@@ -2,12 +2,17 @@
 const express = require('express');
 const fs = require('fs')
 const app = express();
+const morgan = require('morgan');
+
+//first middlewear
 
 
 // middlewear pour permettre d'utiliser les json
+
+// MIDDLEWEARS
+app.use(morgan('dev'));
 app.use(express.json());
 
-//middlewear 
 app.use((req, res, next) => {
     console.log("hello from middlewear😄 ");
     next();
@@ -40,7 +45,7 @@ const getAllTours = (req, res) => {
 
 // requete pour avoir un utilisateur 
 const getTour = (req, res) => {
-    console.log(req.params)
+   
 
     // convert character en nombre 
     const id = req.params.id * 1
@@ -116,7 +121,7 @@ const deleteTour = (req, res) => {
 
 }
 
-//les routes //
+// ROUTES //
 
 // app.get('/api/v1/tours', getAllTours);
 // app.get('/api/v1/tours/:id', getTour);
@@ -135,7 +140,7 @@ app
     .patch(updateTour)
     .delete(deleteTour)
 
-// j'ecoute sur le port 3000
+// SERVER
 const port = 3000;
 app.listen(port, () => {
     console.log(`app running ${port}...`)

@@ -6,7 +6,7 @@ const morgan = require('morgan');
 
 
 const tourRouter = require('./route/tourRoutes');
-const userRouter = require('./route/userRoutes');
+const  userRouter = require('./route/userRoutes');
 
 //first middlewear
 
@@ -34,11 +34,7 @@ app.use((req, res, next) => {
 
 
 app.use('/api/v1/tours', tourRouter);
-app.use('/api/v1/user', userRouter);
+app.use('/api/v1/users', userRouter);
 
 
-// SERVER 
-const port = 3000;
-app.listen(port, () => {
-    console.log(`app running ${port}...`)
-});
+module.exports = app;

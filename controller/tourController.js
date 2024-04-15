@@ -5,6 +5,18 @@ const tours = JSON.parse(
     fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`))
 
 
+exports.checkBody = (req, res, next) => {
+    console.log(req.body)
+    if (!req.body.name || !req.body.price) {
+        return res.status(400).json({
+            status: 'fail',
+            message: "no name and no price",
+        })
+    }
+    next();
+}
+
+
 // Middlewear de verification id
 exports.checkId = (req, res, next, val) => {
     console.log(`tour id is : ${val}`);

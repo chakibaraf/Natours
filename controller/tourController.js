@@ -5,8 +5,18 @@ const tours = JSON.parse(
     fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`))
 
 
+// Middlewear de verification id
+exports.checkId = (req, res, next, val) => {
+    console.log(`tour id is : ${val}`);
+    if (req.params.id * 1 > tours.length) {
+        return res.status(404).json({
+            status: 'fail',
+            message: 'invalid id ,impossible update',
+        });
+    }
+    next();
 
-
+}
 
 
 exports.getAllTours = (req, res) => {
@@ -29,12 +39,7 @@ exports.getTour = (req, res) => {
     const id = req.params.id * 1
     const tour = tours.find(el => el.id === id);
 
-    if (!tour) {
-        return res.status(404).json({
-            status: 'fail',
-            message: 'tour dont exist , invalid id  '
-        })
-    }
+
 
     res.status(200).json({
         status: 'success',
@@ -48,12 +53,7 @@ exports.getTour = (req, res) => {
 
 exports.updateTour = (req, res) => {
     console.log(req.body)
-    if (req.params.id * 1 > tours.length) {
-        return res.status(404).json({
-            status: 'fail',
-            message: 'invalid id ,impossible update',
-        });
-    }
+
     res.status(200).json({
 
         status: 'success',
@@ -84,13 +84,7 @@ exports.createTour = (req, res) => {
 }
 
 exports.deleteTour = (req, res) => {
-    if (req.params.id > tours.length) {
-        res.status(404).json({
-            status: 'fail',
-            message: 'invalid id cant delete'
-        })
 
-    }
     res.status(204).json({
         status: 'success',
         message: 'delete tour',

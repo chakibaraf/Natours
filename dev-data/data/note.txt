@@ -1,0 +1,3 @@
+node dev-data/data/import-dev-data.js --import
+
+node dev-data/data/import-dev-data.js --delete

@@ -1,0 +1,30 @@
+Filtrage des champs indésirables /////////////////////////////////////
+(1A) : Cette étape supprime les champs indésirables de l'objet req.query, tels que ceux utilisés pour la pagination,
+ le tri ou la sélection des champs. Cela permet de garantir que seuls les filtres pertinents sont utilisés dans la requête MongoDB.
+
+- Requête avancée (1B) : 
+Cette étape prend en charge les requêtes avancées avec des opérateurs de comparaison 
+tels que $gte, $gt, $lte et $lt. Cela permet de filtrer les résultats en fonction de valeurs minimales ou maximales pour certains champs.
+
+- Tri (2) : Si la requête contient une directive de tri (sort), les résultats seront triés en fonction des champs spécifiés. 
+Les champs de tri sont séparés par une virgule dans la requête, 
+puis convertis en une chaîne pour être utilisés dans la fonction de tri de MongoDB.
+
+- Exécution de la requête : 
+La requête MongoDB est exécutée pour récupérer les résultats filtrés et triés.
+Envoi de la réponse : Les résultats sont envoyés sous forme de réponse JSON avec 
+des informations sur le statut de la requête et le nombre de résultats retournés.
+
+//////////////////////////////////////////////////////////////
+
+FIELDS ////////////////////////////////////////////////////////////////////////////////////////
+
+Si req.query.fields est défini, cela signifie que l'utilisateur a spécifié des champs dans la requête.
+Le code divise alors ces champs en une liste séparée par des virgules (req.query.fields.split(',')), 
+puis les joint en une chaîne unique séparée par des espaces (req.query.fields.split(',').join(' ')). 
+Cela prépare la liste des champs à être utilisée dans la méthode select() de Mongoose.
+Ensuite, la requête Mongoose est mise à jour pour sélectionner uniquement les champs spécifiés (query.select(fields)).
+Sinon, si aucun champ n'est spécifié, la requête est mise à jour pour exclure le champ __v 
+(utilisé par Mongoose pour la version du document) en utilisant -__v dans la méthode select().
+
+////////////////////////////////////////////////////////////////
